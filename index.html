@@ -1,0 +1,100 @@
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Document</title>
+        <script src="https://unpkg.com/vue@3"></script>
+    
+        <style>
+            .butangMerah {
+                width : 200px;
+                height: 100px;
+                border-radius : 15px;
+                background-color: red;
+                transition: 2ms;
+            }
+
+            .butangGreen {
+                width : 180px;
+                height: 100px;
+                border-radius : 20px;
+                background-color: green;
+            }
+        </style>
+    </head>
+    
+    <body>
+        <div id="app">
+            <p>
+                {{ greeting }} -  {{ greeting.length }}
+            </p>
+
+            <button v-bind:class="flagBool ? buttonClasses : 'NoClass'" v-on:click="()=>{this.buttonClasses = 'butangGreen';}">Clicked Me!</button>
+        
+            <hr>
+
+            <li v-for="item in assignments">
+                <label>{{ item.name }} <input type="checkbox" v-model="item.completed"/></label>
+            </li>
+
+            <hr>
+            <pre>
+                {{ assignments }}
+            </pre>
+        </div>
+
+        <script>
+            Vue.createApp({
+                data() {
+                    return {
+                        greeting : "Apa khabar?",
+                        buttonClasses: 'butangMerah',
+                        flagBool : false,
+                        assignments : [
+                            { name : 'finished project', completed : true},
+                            { name : 'belum complete project', completed : false}
+                        ],
+                    };
+                },
+
+                mounted() {
+                    setTimeout(()=>{
+                        //alert('test');
+                        this.flagBool = true;
+                    },3000);
+                },
+            }).mount('#app');
+        </script>
+    </body>
+</html>
+
+
+<!--
+    1.
+    nota sikit
+    v-bind:class = short-hand buang v-bind
+    :class je terus
+
+
+    2.
+    v-on:click = short-hand dia jadi @click
+
+    3.
+    .filter(item => item != "") //penting gila
+
+    4.
+    better dekat v-for looping rendering tu..
+    letak la :key="variable"
+    supaya dia tak re-rendering benda yang tak perlu
+
+    5.
+    v-show="expression - condition"
+    //macam enable or disable the component
+
+    @
+
+    v-if="expression"
+    //boleh gak.. cuma beza dia:
+    //v-show display : none;
+    //v-if tak betul : tak render terus
+
+-->

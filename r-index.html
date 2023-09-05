@@ -1,0 +1,151 @@
+<html>
+    <head>
+        <title>Document</title>
+        <script src="https://unpkg.com/vue@3"></script>
+    </head>
+    <body>
+        <div id="app">
+            <center>
+                <div style="background-color: red; width : 500px; height : 100px; display: block; overflow: hidden; border-radius: 25px;">
+                    <p v-for="item in textParagraph" :style="item === textParagraph[counterStrike+1] ? {'color': 'white', 'display': 'inline-block', 'font-size': '35px'} : {'display': 'inline-block', 'font-size': '35px'}">{{ item }}&nbsp;</p>
+                </div>
+                <p>
+                    <input style="width : 500px; height : 50px; text-align: center; border-radius: 15px; font-size: 25px;" type="text" v-model="tulisan"/>
+                </p>
+                <h1>
+                    '{{ tulisan }}'  - ({{ calculate }})
+                </h1>
+                <hr>
+                <h3>Per Char</h3>
+                <p>
+                    Speed typed per Character : {{ perChar.toFixed(2) }} ms
+                </p>
+                <p>
+                    Total Character : {{ countChar }}
+                </p>
+                <p>
+                    Total Average Speed typed per Character : {{ average.toFixed(2) }} ms
+                </p>
+                <hr>
+                <h3>
+                    Per Word
+                </h3>
+                <h1>WPM : {{ calculateAverageWPM }}</h1>
+                <p>
+                    Total Words : {{ wordsCount }}
+                </p>
+                <p>
+                    Correct words : {{ correctTotalCount }}
+                </p>
+                <p>
+                    Correctness : {{ correctnessPercentage }}%
+                </p>
+            </center>
+        </div>
+
+        <script>
+            Vue.createApp({
+                data() {
+                    return {
+                        tulisan : '',
+                        average : 0.0,
+                        perChar : 0.0,
+                        perCharTotal : 0.0,
+                        wordsCount : 0,
+                        counterStrike : 0,
+                        countChar : 0,
+                        startEnd : [0, 0],
+                        startEndWords : [0, 0],
+                        totalWords : 0.0,
+                        flag : false,
+                        correctTotalCount : 0,
+                        textParagraph : 
+                        `
+                            Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui.
+                            Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum. Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus. Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc, quis gravida magna mi a libero. Fusce vulputate eleifend sapien. Vestibulum purus quam, scelerisque ut, mollis sed, nonummy id, metus. Nullam accumsan lorem in dui. Cras ultricies mi eu turpis hendrerit fringilla. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; In ac dui quis mi consectetuer lacinia.
+                            Nam pretium turpis et arcu. Duis arcu tortor, suscipit eget, imperdiet nec, imperdiet iaculis, ipsum. Sed aliquam ultrices mauris. Integer ante arcu, accumsan a, consectetuer eget, posuere ut, mauris. Praesent adipiscing. Phasellus ullamcorper ipsum rutrum nunc. Nunc nonummy metus. Vestibulum volutpat pretium libero. Cras id dui. Aenean ut eros et nisl sagittis vestibulum. Nullam nulla eros, ultricies sit amet, nonummy id, imperdiet feugiat, pede. Sed lectus. Donec mollis hendrerit risus. Phasellus nec sem in justo pellentesque facilisis. Etiam imperdiet imperdiet orci. Nunc nec neque. Phasellus leo dolor, tempus non, auctor et, hendrerit quis, nisi.
+                            Curabitur ligula sapien, tincidunt non, euismod vitae, posuere imperdiet, leo. Maecenas malesuada. Praesent congue erat at massa. Sed cursus turpis vitae tortor. Donec posuere vulputate arcu. Phasellus accumsan cursus velit. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Sed aliquam, nisi quis porttitor congue, elit erat euismod orci, ac placerat dolor lectus quis orci. Phasellus consectetuer vestibulum elit. Aenean tellus metus, bibendum sed, posuere ac, mattis non, nunc. Vestibulum fringilla pede sit amet augue. In turpis. Pellentesque posuere. Praesent turpis.
+                        `,
+                    };
+                }, //comma ni jangan lupa
+                mounted() {
+                    this.textParagraph = this.textParagraph.split(" ");
+                    this.textParagraph = this.textParagraph.filter(item => item != "");
+                    //console.log(this.textParagraph);
+                },
+                methods: {
+                    cariAverage : function() {
+                        this.perChar = (this.startEnd[1] - this.startEnd[0]);
+                        this.perCharTotal += this.perChar;
+                        this.average = (this.perCharTotal / this.countChar);
+                    },
+
+                    kiraMasa : function() {
+                        if(this.tulisan != '')
+                        {
+                            this.countChar++;
+                            const now = new Date();
+                            const millisecond = now.getMilliseconds();
+                            const second = now.getSeconds();
+                            const minute = now.getMinutes();                        
+
+                            if(this.flag == false)
+                            {
+                                this.startEnd[0] = (minute * 60 * 1000) + (second * 1000) + millisecond;
+                            } else {
+                                this.startEnd[1] = (minute * 60 * 1000) + (second * 1000) + millisecond;
+                                this.cariAverage();
+                                this.startEnd[0] = (minute * 60 * 1000) + (second * 1000) + millisecond;
+                                this.flag = !this.flag;
+                            }
+                            this.flag = !this.flag;
+
+                            if(this.startEndWords[0] == 0)
+                                this.startEndWords[0] = (minute * 60 * 1000) + (second * 1000) + millisecond;
+                        }
+                        if(this.tulisan.includes(" "))
+                        {
+                            if(this.tulisan.replace(/\s/g,'') == this.textParagraph[this.counterStrike+1].replace(/\s/g,''))
+                            {
+                                this.correctTotalCount++;
+                            }
+
+                            this.tulisan = "";
+                            this.wordsCount++;
+                            this.counterStrike++;
+                            if(this.counterStrike == 2)
+                            {
+                                this.counterStrike = 0;
+                                this.textParagraph.splice(0, 2); 
+                            }
+
+                            const now = new Date();
+                            const millisecond = now.getMilliseconds();
+                            const second = now.getSeconds();
+                            const minute = now.getMinutes();
+
+                            this.startEndWords[1] = (minute * 60 * 1000) + (second * 1000) + millisecond;
+                            this.totalWords += (this.startEndWords[1] - this.startEndWords[0]);
+                            this.startEndWords[0] = 0; //reset
+                        }
+                    }
+                },
+
+                computed: {
+                    calculate : function () {
+                        this.kiraMasa();
+                        return this.tulisan.length;
+                    },
+                    correctnessPercentage : function() {
+                        return ((this.correctTotalCount/this.wordsCount)*100).toFixed(2);
+                    },
+                    calculateAverageWPM : function() {
+                        return (this.wordsCount / (this.totalWords/60000)).toFixed(2);
+                        //salah formula
+                        //WPM = Total time in milliseconds / (60k x Total words typed)
+                    }
+                }
+            }).mount('#app');
+        </script>
+    </body>
+</html>

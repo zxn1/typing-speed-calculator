@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>One vue component Per File</title>
+        <script src="https://unpkg.com/vue@3"></script>
+        <script src="https://cdn.tailwindcss.com"></script>
+    </head>
+
+    <body class="">
+        <div id="app">
+            <app-button type="plainstring">Kucing</app-button>
+
+            <hr>
+            <p>For fun only - testing</p>
+            <p>{{ dualComputed.first }}</p>
+            <p>{{ dualComputed.second }}</p>
+            <p>{{ singleComputed }}</p>
+        </div>
+        
+        <!-- nak buat asing2 file/component ni perlu type script module -->
+        <script type="module">
+            import App from './js/components/App.js';
+
+            Vue.createApp(App).mount('#app');
+        </script>
+
+    </body>
+</html>
+
+
+<!--
+some tailwindcss yang amat berguna..
+contoh:
+
++-------------------+
+| Ayam □            |
+| Kucing □          |
+| Lembu Biri-biri □ |
++-------------------+
+
+na jadikan dia:
++-------------------+
+| Ayam            □ |
+| Kucing          □ |
+| Lembu Biri-biri □ |
++-------------------+
+just letak mcm ni..
+<div class="flex justify-between">
+    <p>list.name</p>
+    <input checkbox/>
+</div>
+
+flex then justify-between.. ingat ye..
+
+-->
+
+
+
+<!--
+
+    macam @click.. untuk submit form pun bole guna @submit
+    @click dkt button
+    @submit untuk form.. which is a semantically appropriate guna ni bila berkait form
+    even kita get the data pun guna v-model..
+
+    Extra notes:
+    submit.prevent="panggilfunction"
+
+    .prevent = selalu kalau submit biasa dia reloading kan?
+    kalau guna .prevent dia prevent dari reloading (prevent normal submission behaviour)
+
+-->
+
+
+<!--
+    child to parent communication
+
+    macam react kita perlu react-redux untuk communicate kan?
+    or mcm dalam livewire kita guna emit kan? untuk communicate antara components.
+
+    so dalam vue pun ada, just in-case dah pening/tak boleh na passing props
+
+    cara buat emit in vue??
+
+    dkt child component:
+
+    methods: {
+        namaFunction() {
+            this.$emit('namaEmission', this.parameterNakPass); //penting bahagian ni je
+        }
+    }
+    //namaEmission yang akan digunakan dkt parent yang panggil component kita
+
+
+    parent:
+    <nama-component v-on:namaEmission="panggilFunctionKtParent"></nama-component>
+    v-on:namaEmission tu boleh simplify jadi:
+    @namaEmission
+
+    
+-->

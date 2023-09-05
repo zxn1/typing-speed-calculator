@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Lists and Computed Properties</title>
+        <script src="https://unpkg.com/vue@3"></script>
+        <script src="https://cdn.tailwindcss.com"></script>
+    </head>
+    <!--  class : 
+        h-full = height full
+    -->
+    <body class="h-full place-items-center">
+        <div id="app">
+            <div class="transition duration-300 grid grid-cols-3 gap-2 hover:grid-cols-4 place-items-center">
+                <app-button>Put text in slot</app-button>
+                <app-button>Put text in slot</app-button>
+                <app-button>Put text in slot</app-button>
+            </div>
+        </div>
+        
+        <script>
+            let app = {
+                components: {
+                    'app-button' : {
+                        template: `
+                            <div>
+                                <button :disabled="flagBool" class='bg-gray-200 hover:animate-bounce border mx-5 my-5 rounded duration-300 disabled:cursor-not-allowed'>
+                                    <slot/>
+                                </button>
+                                <input type="checkbox" @click="()=>{this.flagBool = !this.flagBool;}"/>
+                            </div>
+                        `,
+
+                        data() {
+                            return {
+                                flagBool : false,
+                            };
+                        },
+
+                        mounted() {
+                            console.log('hello');
+                        }
+                    },
+                },
+            };
+
+            Vue.createApp(app).mount('#app');
+        </script>
+    </body>
+</html>
